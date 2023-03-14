@@ -1,4 +1,4 @@
-create table passec.user
+create table passec.users
 (
     id       int auto_increment primary key,
     username text,
@@ -13,7 +13,7 @@ create table passec.pastes
     title          text,
     content        longtext,
     createion_date datetime default now(),
-    foreign key (user) references user (id)
+    foreign key (user) references users (id)
 );
 
 
