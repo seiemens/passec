@@ -1,7 +1,7 @@
 package cc.ramon.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
@@ -10,14 +10,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Paste> pastes;
+    private String username;
     private String password;
-    private boolean isAdmin;
+    @Column(name = "is_admin")
+    private boolean isAdmin = false;
 
-    public User(Integer id, List<Paste> pastes, String password, boolean isAdmin) {
+    public User(Integer id, List<Paste> pastes, String username, String password, boolean isAdmin) {
         this.id = id;
         this.pastes = pastes;
+        this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
     }
@@ -41,6 +45,14 @@ public class User {
         this.pastes = pastes;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -55,5 +67,16 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", pastes=" + pastes +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isAdmin=" + isAdmin +
+                '}';
     }
 }

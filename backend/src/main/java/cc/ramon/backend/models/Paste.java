@@ -1,24 +1,36 @@
 package cc.ramon.backend.models;
 
+import cc.ramon.backend.generator.PasteIdGenerator;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "pastes")
 public class Paste {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 6, unique = true)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "paste-generator")
+    @GenericGenerator(name = "paste-generator", strategy = "cc.ramon.backend.generator.PasteIdGenerator")
+    @Column(name = "id", length = 6, unique = true)
     private String id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user")
+    @JsonBackReference
     private User user;
     private String title;
+    @Lob
+    @Column(name = "content")
     private String content;
-    private Time creationDate;
+    @Column(name = "creation_date", columnDefinition = "datetime default now()")
+    private LocalDateTime creationDate = LocalDateTime.now();
 
-    public Paste(String id, User user, String title, String content, Time creationDate) {
+    public Paste(String id, User user, String title, String content, LocalDateTime creationDate) {
         this.id = id;
         this.user = user;
         this.title = title;
@@ -26,7 +38,8 @@ public class Paste {
         this.creationDate = creationDate;
     }
 
-    public Paste(){}
+    public Paste() {
+    }
 
     public String getId() {
         return id;
@@ -60,11 +73,22 @@ public class Paste {
         this.content = content;
     }
 
-    public Time getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Time creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Paste{" +
+                "id='" + id + '\'' +
+                ", user=" + user +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
     }
 }

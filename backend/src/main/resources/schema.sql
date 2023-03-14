@@ -8,11 +8,11 @@ create table passec.users
 
 create table passec.pastes
 (
-    id             varchar(6) primary key,
-    user           int,
-    title          text,
-    content        longtext,
-    createion_date datetime default now(),
+    id            varchar(6) primary key,
+    user          int,
+    title         text,
+    content       longtext,
+    creation_date datetime default now() not null ,
     foreign key (user) references users (id)
 );
 
