@@ -61,9 +61,9 @@ public class PasteController {
     }
 
     @CrossOrigin
-    @GetMapping(path = base + "/{id}/{key}")
-    public Paste getPaste(@PathVariable("id") String id, @PathVariable("key") String key) {
-        return null;
+    @GetMapping(path = base + "/{id}")
+    public Paste getPaste(@PathVariable("id") String id) {
+        return pasteRepository.getReferenceById(id);
     }
 
 }
