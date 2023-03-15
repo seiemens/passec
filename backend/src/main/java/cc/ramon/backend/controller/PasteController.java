@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.yaml.snakeyaml.events.Event;
 
@@ -24,6 +25,7 @@ public class PasteController {
     private final String base = "/paste";
 
     @CrossOrigin
+    @Secured("ROLE_USER")
     @PostMapping(base + "/create")
     public Paste createPaste(@RequestBody PasteDto body) {
         Paste p = new Paste();
@@ -34,6 +36,7 @@ public class PasteController {
     }
 
     @CrossOrigin
+    @Secured("ROLE_USER")
     @DeleteMapping(base + "/{id}")
     public ResponseEntity<String> deletePaste(@PathVariable("id") String id) {
         pasteRepository.deleteById(id);
@@ -41,6 +44,7 @@ public class PasteController {
     }
 
     @CrossOrigin
+    @Secured("ROLE_USER")
     @PostMapping(base + "/edit/{id}")
     public Paste editPaste(@RequestBody PasteDto body, @PathVariable("id") String id) {
         Paste p = pasteRepository.getReferenceById(id);
@@ -52,13 +56,13 @@ public class PasteController {
 
     @CrossOrigin
     @GetMapping(base + "/all")
-    public List<Paste> allVideos() {
+    public List<Paste> allPaste() {
         return pasteRepository.findAll();
     }
 
     @CrossOrigin
     @GetMapping(path = base + "/{id}/{key}")
-    public Paste download(@PathVariable("id") String id, @PathVariable("key") String key) {
+    public Paste getPaste(@PathVariable("id") String id, @PathVariable("key") String key) {
         return null;
     }
 

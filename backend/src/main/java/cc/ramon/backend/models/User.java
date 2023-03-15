@@ -1,11 +1,15 @@
 package cc.ramon.backend.models;
 
+import cc.ramon.backend.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
