@@ -1,6 +1,6 @@
 <script>
     import {A, Alert, Button, ButtonGroup, Hr, Input, InputAddon, Label, P, Tooltip} from "flowbite-svelte";
-    import LoginForm from "$lib/LoginForm.svelte";
+    import LoginForm from "../../components/LoginForm.svelte";
 
     let showPw = false;
     let username = "";
@@ -12,7 +12,7 @@
 
 </script>
 <div class="container mx-auto w-full sm:w-2/3 my-56 outline outline-1 outline-gray-200 dark:outline-gray-700 p-10 sm:rounded-lg">
-    <LoginForm buttonClickFunction={()=>doLogin()} headerText="Login" hasPwForgottenText={true} buttonText="Login" footerText="Not signed up yet?" footerLink="/register" footerLinkText="Register"></LoginForm>
+    <LoginForm buttonClickFunction={()=>doLogin()} headerText="Register" hasPwForgottenText={false} buttonText="Register" footerText="Already have an account?" footerLink="/login" footerLinkText="Login"></LoginForm>
     <Alert color="red" class="mt-4 {alertHidden}">
         <span class="font-medium">Login Error!</span> Username or Password is wrong!
     </Alert>

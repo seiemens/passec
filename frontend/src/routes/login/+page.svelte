@@ -1,6 +1,6 @@
 <script>
     import {A, Alert, Button, ButtonGroup, Hr, Input, InputAddon, Label, P, Tooltip} from "flowbite-svelte";
-    import LoginForm from "$lib/LoginForm.svelte";
+    import LoginForm from "../../components/LoginForm.svelte";
 
     let showPw = false;
     let username = "";

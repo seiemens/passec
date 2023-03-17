@@ -30,17 +30,10 @@ public class Paste {
     @Column(name = "creation_date", columnDefinition = "datetime default now()")
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    public Paste(String id, User user, String title, String content, LocalDateTime creationDate) {
-        this.id = id;
-        this.user = user;
-        this.title = title;
-        this.content = content;
-        this.creationDate = creationDate;
-    }
-
     public Paste() {
     }
 
+    //region getter/setter
     public String getId() {
         return id;
     }
@@ -80,6 +73,7 @@ public class Paste {
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
+    //endregion
 
     @Override
     public String toString() {

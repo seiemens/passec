@@ -40,7 +40,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable().authorizeHttpRequests()
-                .anyRequest().permitAll()
+                .requestMatchers("/paste/view/*","/user/create").permitAll()
+                .anyRequest().hasAnyRole("ADMIN","USER")
                 .and()
                 .httpBasic().authenticationEntryPoint(entryPoint);
 

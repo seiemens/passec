@@ -22,17 +22,10 @@ public class User {
     @Column(name = "is_admin")
     private boolean isAdmin = false;
 
-    public User(Integer id, List<Paste> pastes, String username, String password, boolean isAdmin) {
-        this.id = id;
-        this.pastes = pastes;
-        this.username = username;
-        this.password = password;
-        this.isAdmin = isAdmin;
-    }
-
     public User() {
     }
 
+    //region getter/setter
     public Integer getId() {
         return id;
     }
@@ -72,6 +65,7 @@ public class User {
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
+    //endregion
 
     @Override
     public String toString() {

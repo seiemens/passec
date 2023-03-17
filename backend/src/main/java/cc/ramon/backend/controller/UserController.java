@@ -14,7 +14,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Configurable
@@ -37,17 +39,21 @@ public class UserController {
     }
 
     @CrossOrigin
-    @Secured("ROLE_ADMIN")
     @DeleteMapping(base + "/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") int id) {
+    public ResponseEntity<String> deleteUser(Principal principal, @PathVariable("id") int id) {
+        Optional<User> requestUser = userRepository.findByUsername(principal.getName());
+        if (!requestUser.get().isAdmin())
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
         userRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted!");
     }
 
     @CrossOrigin
-    @Secured("ROLE_ADMIN")
     @GetMapping(base + "/all")
-    public List<User> allUsers() {
+    public List<User> allUsers(Principal principal) {
+        Optional<User> requestUser = userRepository.findByUsername(principal.getName());
+        if (!requestUser.get().isAdmin())
+            return null;
         return userRepository.findAll();
     }
 

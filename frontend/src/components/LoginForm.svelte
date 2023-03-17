@@ -51,7 +51,7 @@
         </Tooltip>
     {/if}
     <div class="flex flex-row justify-center">
-        <Button class="mt-5 w-1/2" on:click={()=>buttonClickFunction}>{buttonText}</Button>
+        <Button class="mt-5 w-96" on:click={()=>buttonClickFunction}>{buttonText}</Button>
     </div>
     <Hr class="w-1/2"></Hr>
     <div class="flex flex-row justify-center">

@@ -1,19 +1,20 @@
 package cc.ramon.backend.controller;
 
 import cc.ramon.backend.dto.PasteDto;
+import cc.ramon.backend.models.User;
 import cc.ramon.backend.repository.PasteRepository;
 import cc.ramon.backend.models.Paste;
 import cc.ramon.backend.repository.UserRepository;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.events.Event;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @Configurable
@@ -25,33 +26,39 @@ public class PasteController {
     private final String base = "/paste";
 
     @CrossOrigin
-    @Secured("ROLE_USER")
     @PostMapping(base + "/create")
     public Paste createPaste(@RequestBody PasteDto body) {
-        Paste p = new Paste();
-        p.setContent(body.getContent());
-        p.setTitle(body.getTitle());
-        p.setUser(userRepository.getReferenceById(body.getUserId()));
-        return pasteRepository.save(p);
+        Paste newPaste = new Paste();
+        newPaste.setContent(body.getContent());
+        newPaste.setTitle(body.getTitle());
+        newPaste.setUser(userRepository.getReferenceById(body.getUserId()));
+        return pasteRepository.save(newPaste);
     }
 
     @CrossOrigin
-    @Secured("ROLE_USER")
     @DeleteMapping(base + "/{id}")
-    public ResponseEntity<String> deletePaste(@PathVariable("id") String id) {
+    public ResponseEntity<String> deletePaste(Principal principal, @PathVariable("id") String id) {
+        Optional<Paste> pasteOptional = pasteRepository.getReferenceById(id);
+
+        if (isUserNotOwningPaste(principal, pasteOptional))
+            return null;
+
         pasteRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Paste deleted!");
     }
 
     @CrossOrigin
-    @Secured("ROLE_USER")
     @PostMapping(base + "/edit/{id}")
-    public Paste editPaste(@RequestBody PasteDto body, @PathVariable("id") String id) {
-        Paste p = pasteRepository.getReferenceById(id);
-        p.setContent(body.getContent());
-        p.setTitle(body.getTitle());
-        pasteRepository.save(p);
-        return pasteRepository.save(p);
+    public Paste editPaste(Principal principal, @RequestBody PasteDto body, @PathVariable("id") String id) {
+        Optional<Paste> pasteOptional = pasteRepository.getReferenceById(id);
+
+        if (isUserNotOwningPaste(principal, pasteOptional))
+            return null;
+
+        pasteOptional.get().setContent(body.getContent());
+        pasteOptional.get().setTitle(body.getTitle());
+        return pasteRepository.save(pasteOptional.get());
+
     }
 
     @CrossOrigin
@@ -61,9 +68,20 @@ public class PasteController {
     }
 
     @CrossOrigin
-    @GetMapping(path = base + "/{id}")
+    @GetMapping(path = base + "/view/{id}")
     public Paste getPaste(@PathVariable("id") String id) {
-        return pasteRepository.getReferenceById(id);
+        Optional<Paste> paste = pasteRepository.getReferenceById(id);
+        return paste.orElse(null);
+    }
+
+    private boolean isUserNotOwningPaste(Principal principal, Optional<Paste> paste) {
+        Optional<User> u = userRepository.findByUsername(principal.getName());
+
+        if (paste.isEmpty()) {
+            return true;
+        }
+
+        return !Objects.equals(u.get().getId(), paste.get().getUser().getId());
     }
 
 }

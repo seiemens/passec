@@ -11,6 +11,7 @@
         links = [...links, {label: "Home", href: "/"}];
         //order is important, else it looks ugly and makes no sense from ergonomics perspective
         links = [...links, {label: "Gallery", href: "/gallery"}];
+        links = [...links, {label: "Edit", href: "/edit/bla"}];
 
         links = [...links, {label: "User List", href: "/admin"}];
 
