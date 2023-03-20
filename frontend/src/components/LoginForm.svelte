@@ -10,8 +10,8 @@
     export let footerLinkText;
 
     let showPw = false;
-    let username = "admin";
-    let password = "admin";
+    let username = "";
+    let password = "";
 
 </script>
 <div>
