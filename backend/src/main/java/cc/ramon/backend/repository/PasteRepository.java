@@ -17,4 +17,6 @@ public interface PasteRepository extends JpaRepository<Paste, Integer> {
     void deleteById(String id);
 
     Optional<Paste> getReferenceById(String id);
+
+    List<Paste> findAllByUserId(int userId);
 }

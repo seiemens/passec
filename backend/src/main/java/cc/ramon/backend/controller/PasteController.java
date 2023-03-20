@@ -1,9 +1,9 @@
 package cc.ramon.backend.controller;
 
 import cc.ramon.backend.dto.PasteDto;
+import cc.ramon.backend.models.Paste;
 import cc.ramon.backend.models.User;
 import cc.ramon.backend.repository.PasteRepository;
-import cc.ramon.backend.models.Paste;
 import cc.ramon.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @Configurable
+@CrossOrigin
 public class PasteController {
     @Autowired
     private PasteRepository pasteRepository;
@@ -25,17 +26,16 @@ public class PasteController {
     private UserRepository userRepository;
     private final String base = "/paste";
 
-    @CrossOrigin
     @PostMapping(base + "/create")
-    public Paste createPaste(@RequestBody PasteDto body) {
+    public Paste createPaste(Principal principal, @RequestBody PasteDto body) {
+        Optional<User> user = userRepository.findByUsername(principal.getName());
         Paste newPaste = new Paste();
         newPaste.setContent(body.getContent());
         newPaste.setTitle(body.getTitle());
-        newPaste.setUser(userRepository.getReferenceById(body.getUserId()));
+        newPaste.setUser(user.get());
         return pasteRepository.save(newPaste);
     }
 
-    @CrossOrigin
     @DeleteMapping(base + "/{id}")
     public ResponseEntity<String> deletePaste(Principal principal, @PathVariable("id") String id) {
         Optional<Paste> pasteOptional = pasteRepository.getReferenceById(id);
@@ -47,7 +47,6 @@ public class PasteController {
         return ResponseEntity.status(HttpStatus.OK).body("Paste deleted!");
     }
 
-    @CrossOrigin
     @PostMapping(base + "/edit/{id}")
     public Paste editPaste(Principal principal, @RequestBody PasteDto body, @PathVariable("id") String id) {
         Optional<Paste> pasteOptional = pasteRepository.getReferenceById(id);
@@ -61,13 +60,12 @@ public class PasteController {
 
     }
 
-    @CrossOrigin
     @GetMapping(base + "/all")
-    public List<Paste> allPaste() {
-        return pasteRepository.findAll();
+    public List<Paste> allPaste(Principal principal) {
+        Optional<User> user = userRepository.findByUsername(principal.getName());
+        return pasteRepository.findAllByUserId(user.get().getId());
     }
 
-    @CrossOrigin
     @GetMapping(path = base + "/view/{id}")
     public Paste getPaste(@PathVariable("id") String id) {
         Optional<Paste> paste = pasteRepository.getReferenceById(id);

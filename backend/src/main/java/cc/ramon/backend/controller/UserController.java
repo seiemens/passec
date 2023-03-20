@@ -1,16 +1,12 @@
 package cc.ramon.backend.controller;
 
-import cc.ramon.backend.dto.PasteDto;
 import cc.ramon.backend.dto.UserDto;
-import cc.ramon.backend.models.Paste;
 import cc.ramon.backend.models.User;
-import cc.ramon.backend.repository.PasteRepository;
 import cc.ramon.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @Configurable
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -29,7 +26,6 @@ public class UserController {
 
     private final String base = "/user";
 
-    @CrossOrigin
     @PostMapping(base + "/create")
     public User createPaste(@RequestBody UserDto body) {
         User newUser = new User();
@@ -38,7 +34,6 @@ public class UserController {
         return userRepository.save(newUser);
     }
 
-    @CrossOrigin
     @DeleteMapping(base + "/{id}")
     public ResponseEntity<String> deleteUser(Principal principal, @PathVariable("id") int id) {
         Optional<User> requestUser = userRepository.findByUsername(principal.getName());
@@ -48,13 +43,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("User deleted!");
     }
 
-    @CrossOrigin
     @GetMapping(base + "/all")
     public List<User> allUsers(Principal principal) {
         Optional<User> requestUser = userRepository.findByUsername(principal.getName());
         if (!requestUser.get().isAdmin())
             return null;
         return userRepository.findAll();
+    }
+
+    @GetMapping(base + "/self")
+    public User getSelfUser(Principal principal) {
+        Optional<User> requestUser = userRepository.findByUsername(principal.getName());
+        return requestUser.get();
     }
 
 }
