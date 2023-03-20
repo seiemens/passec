@@ -10,9 +10,8 @@
     export let footerLinkText;
 
     let showPw = false;
-    let username = "";
-    let password = "";
-    let alertHidden = "hidden"
+    let username = "admin";
+    let password = "admin";
 
 </script>
 <div>
@@ -21,7 +20,7 @@
         <span>Username</span>
         <Input bind:value={username} placeholder="johnny" size="md" type="text"/>
     </Label>
-    <Label class="mb-2 dark:text-gray-400" for="show-password">Your password</Label>
+    <Label class="mb-2" for="show-password">Your password</Label>
     <ButtonGroup class="w-full">
         <InputAddon>
             <button on:click={() => (showPw = !showPw)}>
@@ -51,7 +50,7 @@
         </Tooltip>
     {/if}
     <div class="flex flex-row justify-center">
-        <Button class="mt-5 w-96" on:click={()=>buttonClickFunction}>{buttonText}</Button>
+        <Button class="mt-5 w-96" on:click={()=>buttonClickFunction(username,password)}>{buttonText}</Button>
     </div>
     <Hr class="w-1/2"></Hr>
     <div class="flex flex-row justify-center">

@@ -2,20 +2,26 @@
     import {onMount} from "svelte";
     import {DarkMode, Navbar, NavBrand, NavHamburger, NavLi, NavUl} from 'flowbite-svelte'
     import {navigating} from "$app/stores";
+    import {checkSignIn} from "$lib/loginHelper.js";
+    import {isAdmin, isLoggedIn} from "$lib/stores.js";
 
     let btnClass = "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm 5 z-50";
     let links = []
 
     async function generateNavLinks() {
+        await checkSignIn();
         links = []
         links = [...links, {label: "Home", href: "/"}];
-        //order is important, else it looks ugly and makes no sense from ergonomics perspective
-        links = [...links, {label: "Gallery", href: "/gallery"}];
-        links = [...links, {label: "Edit", href: "/edit/bla"}];
+        if ($isLoggedIn) {
+            links = [...links, {label: "Gallery", href: "/gallery"}];
+            if ($isAdmin)
+                links = [...links, {label: "User List", href: "/admin"}];
+            links = [...links, {label: "Logout", href: "/logout"}];
+        } else {
+            links = [...links, {label: "Login", href: "/login"}];
+        }
 
-        links = [...links, {label: "User List", href: "/admin"}];
 
-        links = [...links, {label: "Logout", href: "/logout"}];
     }
 
     $: if ($navigating) generateNavLinks();
