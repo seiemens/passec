@@ -3,7 +3,7 @@
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {createPaste, deletePaste, getPastes} from "$lib/apiCalls.js";
-    import {decryptToText} from "$lib/encryptionHelper.js";
+    import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
 
     let loading = true;
 
@@ -48,7 +48,8 @@
             </div>
         {:else}
             {#each notes as note,i}
-                <Card class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" href={"/view/"+note.id}>
+                <Card class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+                      href={"/view/"+note.id+"?k="+getEncryptionKey(note.id)}>
                     <div class="flex justify-end">
                         <MenuButton id={"dd-mb-"+i} on:click={(e)=>e.preventDefault()}/>
                         <Dropdown class="w-36">

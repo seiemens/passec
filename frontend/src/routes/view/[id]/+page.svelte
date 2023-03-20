@@ -1,20 +1,26 @@
 <script>
-    import {Hr} from "flowbite-svelte";
+    import {Button, Hr, Input, Label, Modal} from "flowbite-svelte";
     import {onMount} from "svelte";
     import {getPasteById} from "$lib/apiCalls.js";
     import {page} from "$app/stores";
-    import {decryptToText} from "$lib/encryptionHelper.js";
+    import {decryptToTextWithKey} from "$lib/encryptionHelper.js";
 
     const id = $page.params.id;
+    let encryptionKey = $page.url.searchParams.get("k");
+    let noKeyPresent = encryptionKey === null;
 
-    let title = "";
-    let content = "";
+    let title = "no data";
+    let content = "no data";
 
     onMount(async () => {
-        const res = await getPasteById(id);
-        title = decryptToText(id, res.title);
-        content = decryptToText(id, res.content);
+        await loadPaste();
     });
+
+    async function loadPaste() {
+        const res = await getPasteById(id);
+        title = decryptToTextWithKey(encryptionKey, res.title);
+        content = decryptToTextWithKey(encryptionKey, res.title);
+    }
 
 
 </script>
@@ -28,3 +34,15 @@
         {content}
     </div>
 </div>
+
+<Modal autoclose bind:open={noKeyPresent} size="xl" title="Please Specify an encryption key!">
+    <div class="w-96">
+        <Label class="space-y-2 mb-5">
+            <span>Encryption Key</span>
+            <Input bind:value={encryptionKey} size="md" type="text"/>
+        </Label>
+    </div>
+    <svelte:fragment slot='footer'>
+        <Button class="ml-auto" on:click={()=>loadPaste()}>Submit Key</Button>
+    </svelte:fragment>
+</Modal>

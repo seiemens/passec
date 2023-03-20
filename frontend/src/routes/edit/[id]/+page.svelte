@@ -21,14 +21,21 @@
     });
 
     async function saveNote() {
-        console.log(encryptionKey)
         const encTitle = CryptoES.AES.encrypt(title, encryptionKey).toString();
         const encContent = CryptoES.AES.encrypt(content, encryptionKey).toString();
         const res = editPaste(id, encTitle, encContent);
     }
 
     function copyEncryptionKey() {
+        navigator.clipboard.writeText(encryptionKey);
+    }
 
+    function generateUrlExample() {
+        let domain = window.location.toString().substring(0, window.location.toString().length - 11);
+        let path = "view/" + id;
+        let parameter = "?k=" + encryptionKey;
+
+        return domain + path + parameter;
     }
 
 
@@ -58,11 +65,14 @@
 </div>
 
 <Modal bind:open={encryptionKeyModal} title="View Encryption Key">
-    <div class="">
-        <P class="p-2 bg-gray-900">{encryptionKey}</P>
+    <div>
+        <P class="p-2 bg-gray-900 mb-4">{encryptionKey}</P>
+        <P class="text-lg"><b>How to Use</b></P>
+        <P>Append ?k=[key] to the view url. Example:</P>
+        <P class="p-2 bg-gray-900 mb-4">{generateUrlExample()}</P>
     </div>
     <svelte:fragment slot='footer'>
+        <Button class="ml-auto" color="dark" on:click={()=>encryptionKeyModal=false} outline>Close</Button>
         <Button on:click={()=>copyEncryptionKey()}>Copy Key</Button>
-        <Button color="dark" on:click={()=>encryptionKeyModal=false} outline>Close</Button>
     </svelte:fragment>
 </Modal>

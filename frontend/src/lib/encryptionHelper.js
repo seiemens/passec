@@ -7,3 +7,7 @@ export function getEncryptionKey(variable) {
 export function decryptToText(variable, text) {
     return CryptoES.AES.decrypt(text, getEncryptionKey(variable)).toString(CryptoES.enc.Utf8);
 }
+
+export function decryptToTextWithKey(key, text) {
+    return CryptoES.AES.decrypt(text, key).toString(CryptoES.enc.Utf8);
+}
