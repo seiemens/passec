@@ -2,6 +2,8 @@
 
 create and store notes with ease. Secure by design.
 
+# live version at https://passec.ramon.cc
+
 ## how to install backend
 
 1. clone repo
@@ -12,3 +14,4 @@ create and store notes with ease. Secure by design.
   - DB_HOST=jdbc:mariadb://passec-db:3306/passec
 4. run `sudo docker compose -p passec up -d`
 5. enjoy
+
