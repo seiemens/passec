@@ -45,7 +45,7 @@ export async function getPastes() {
 export async function getPasteById(id) {
     return await (await fetch(apiURL + '/paste/view/' + id, {
         method: 'GET', headers: {
-            'content-type': 'application/json', 'authorization': setAuthHeader()
+            'content-type': 'application/json'
         }
     })).json();
 }
