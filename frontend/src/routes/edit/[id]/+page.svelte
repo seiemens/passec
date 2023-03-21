@@ -1,10 +1,11 @@
 <script>
     import {Button, Input, Label, Modal, P, Textarea} from "flowbite-svelte";
     import {onMount} from "svelte";
-    import {editPaste, getPasteById} from "$lib/apiCalls.js";
+    import {deletePaste, editPaste, getPasteById} from "$lib/apiCalls.js";
     import {page} from "$app/stores";
     import CryptoES from "crypto-es";
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
+    import {beforeNavigate} from "$app/navigation";
 
     const id = $page.params.id;
 
@@ -31,13 +32,16 @@
     }
 
     function generateUrlExample() {
-        let domain = window.location.toString().substring(0, window.location.toString().length - 11);
-        let path = "view/" + id;
+        let domain = "https://" + window.location.hostname;
+        let path = "/view/" + id;
         let parameter = "?k=" + encryptionKey;
 
         return domain + path + parameter;
     }
 
+    async function cancelEdit() {
+        history.back();
+    }
 
 </script>
 
@@ -58,7 +62,7 @@
             <Textarea bind:value={content} class="h-96" placeholder="note content"></Textarea>
         </Label>
         <div class="flex flex-row gap-2">
-            <Button class="mt-5 w-20 ml-auto" color="dark" on:click={()=>history.back()} outline>Cancel</Button>
+            <Button class="mt-5 w-20 ml-auto" color="dark" on:click={()=>cancelEdit()} outline>Cancel</Button>
             <Button class="mt-5 w-80 " on:click={()=>saveNote()}>Save</Button>
         </div>
     </div>

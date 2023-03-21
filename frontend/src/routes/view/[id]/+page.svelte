@@ -9,8 +9,8 @@
     let encryptionKey = $page.url.searchParams.get("k");
     let noKeyPresent = encryptionKey === null;
 
-    let title = "no data";
-    let content = "no data";
+    let title = "encryption key not present";
+    let content = "encryption key not present";
 
     onMount(async () => {
         await loadPaste();
@@ -19,7 +19,7 @@
     async function loadPaste() {
         const res = await getPasteById(id);
         title = decryptToTextWithKey(encryptionKey, res.title);
-        content = decryptToTextWithKey(encryptionKey, res.title);
+        content = decryptToTextWithKey(encryptionKey, res.content);
     }
 
 

@@ -1,19 +1,29 @@
 <script>
-    import {Button, Card, Dropdown, DropdownItem, MenuButton, Spinner, Tooltip} from "flowbite-svelte";
+    import {Button, Card, Dropdown, DropdownItem, MenuButton, Spinner, Toast, Tooltip} from "flowbite-svelte";
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {createPaste, deletePaste, getPastes} from "$lib/apiCalls.js";
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
+    import {slide} from "svelte/transition";
 
     let loading = true;
+    let showCopyToast = false;
 
     let notes = [];
 
     onMount(async () => {
-        notes = await getPastes();
-        loading = false;
-        console.log(notes)
-    })
+            notes = await getPastes();
+
+            for (let note of notes) {
+                if (note.title === "" && note.content === "") {
+                    await deletePaste(note.id);
+                    notes = notes.filter((n) => n.id !== note.id);
+                }
+            }
+
+            loading = false;
+        }
+    )
 
     async function deleteNote(noteId, dropdownId) {
         const res = await deletePaste(noteId);
@@ -25,6 +35,16 @@
 
     function shareNote(noteId, dropdownId) {
         closeDropDown(dropdownId);
+
+        let domain = "https://" + window.location.hostname;
+        let path = "/view/" + noteId;
+        let parameter = "?k=" + getEncryptionKey(noteId);
+        navigator.clipboard.writeText(domain + path + parameter);
+
+        showCopyToast = true;
+        setTimeout(() => {
+            showCopyToast = false;
+        }, 5000);
     }
 
     function closeDropDown(dropdownId) {
@@ -75,3 +95,14 @@
     </svg>
 </Button>
 <Tooltip>Create new Note</Tooltip>
+
+<Toast bind:open={showCopyToast} class="fixed bottom-6 left-6" simple transition={slide}>
+    <svelte:fragment slot="icon">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+    </svelte:fragment>
+    Link Copied to clipboard!
+</Toast>
