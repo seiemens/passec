@@ -1,15 +1,10 @@
 package cc.ramon.backend.models;
 
-import cc.ramon.backend.generator.PasteIdGenerator;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "pastes")
@@ -25,7 +20,7 @@ public class Paste {
     private User user;
     private String title;
     @Lob
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "longtext")
     private String content;
     @Column(name = "creation_date", columnDefinition = "datetime default now()")
     private LocalDateTime creationDate = LocalDateTime.now();
