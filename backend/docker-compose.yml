@@ -1,0 +1,26 @@
+version: "2.1"
+
+networks:
+  passec:
+
+services:
+  passec-app:
+    container_name: passec
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      passec-db:
+        condition: service_started
+    networks:
+      - passec
+    env_file:
+      - .env
+
+  passec-db:
+    image: mariadb:latest
+    container_name: passec-db
+    env_file:
+      - .env
+    networks:
+      - passec
