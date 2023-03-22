@@ -1,6 +1,6 @@
 import {setAuthHeader} from "$lib/loginHelper.js";
 
-export const apiURL = "https://apipassec.ramon.cc";
+export const apiURL = "http://localhost:8080";
 
 export async function createUser(username, password) {
     return await fetch(apiURL + '/user/create', {

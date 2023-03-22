@@ -27,11 +27,13 @@ public class UserController {
     private final String base = "/user";
 
     @PostMapping(base + "/create")
-    public User createPaste(@RequestBody UserDto body) {
+    public ResponseEntity<User> createPaste(@RequestBody UserDto body) {
+        if (body.getPassword().equals("") || body.getUsername().equals(""))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         User newUser = new User();
         newUser.setUsername(body.getUsername());
         newUser.setPassword(encoder.encode(body.getPassword()));
-        return userRepository.save(newUser);
+        return ResponseEntity.status(HttpStatus.OK).body(userRepository.save(newUser));
     }
 
     @DeleteMapping(base + "/{id}")

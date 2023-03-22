@@ -1,13 +1,10 @@
 package cc.ramon.backend.config;
 
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 

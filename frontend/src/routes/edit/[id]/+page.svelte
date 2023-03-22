@@ -1,11 +1,12 @@
 <script>
-    import {Button, Input, Label, Modal, P, Textarea} from "flowbite-svelte";
+    import {Button, Input, Label, Modal, P, Textarea, Toast} from "flowbite-svelte";
     import {onMount} from "svelte";
     import {deletePaste, editPaste, getPasteById} from "$lib/apiCalls.js";
     import {page} from "$app/stores";
     import CryptoES from "crypto-es";
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
     import {beforeNavigate} from "$app/navigation";
+    import {slide} from "svelte/transition";
 
     const id = $page.params.id;
 
@@ -13,6 +14,7 @@
     let content = "";
     let encryptionKey = "";
     let encryptionKeyModal = false;
+    let showCopyToast = false;
 
     onMount(async () => {
         encryptionKey = getEncryptionKey(id);
@@ -29,6 +31,10 @@
 
     function copyEncryptionKey() {
         navigator.clipboard.writeText(encryptionKey);
+        showCopyToast = true;
+        setTimeout(() => {
+            showCopyToast = false;
+        }, 5000);
     }
 
     function generateUrlExample() {
@@ -70,13 +76,24 @@
 
 <Modal bind:open={encryptionKeyModal} title="View Encryption Key">
     <div>
-        <P class="p-2 bg-gray-900 mb-4">{encryptionKey}</P>
+        <P class="p-2 dark:bg-gray-900 bg-gray-100 mb-4">{encryptionKey}</P>
         <P class="text-lg"><b>How to Use</b></P>
         <P>Append ?k=[key] to the view url. Example:</P>
-        <P class="p-2 bg-gray-900 mb-4">{generateUrlExample()}</P>
+        <P class="p-2 dark:bg-gray-900 bg-gray-100 mb-4">{generateUrlExample()}</P>
     </div>
     <svelte:fragment slot='footer'>
         <Button class="ml-auto" color="dark" on:click={()=>encryptionKeyModal=false} outline>Close</Button>
         <Button on:click={()=>copyEncryptionKey()}>Copy Key</Button>
     </svelte:fragment>
 </Modal>
+
+<Toast bind:open={showCopyToast} class="fixed bottom-6 left-6" simple transition={slide}>
+    <svelte:fragment slot="icon">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+    </svelte:fragment>
+    Link Copied to clipboard!
+</Toast>
