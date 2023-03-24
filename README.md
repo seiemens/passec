@@ -15,3 +15,11 @@ create and store notes with ease. Secure by design.
 4. run `sudo docker compose -p passec up -d`
 5. enjoy
 
+## how to run frontend
+
+1. clone repo
+2. `cd ./passec/frontend`
+3. `npm install`
+4. `npm run dev`
+5. enjoy
+
