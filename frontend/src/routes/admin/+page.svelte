@@ -10,11 +10,15 @@
     } from "flowbite-svelte";
     import {onMount} from "svelte";
     import {deleteUser, getAllUsers} from "$lib/apiCalls.js";
+    import {isAdmin, isLoggedIn} from "$lib/stores.js";
+    import {goto} from "$app/navigation";
 
     let searchTerm = '';
     let users = [];
 
     onMount(async () => {
+        if (!$isAdmin)
+            await goto("/login");
         users = await getAllUsers();
     })
 

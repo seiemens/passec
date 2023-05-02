@@ -5,6 +5,7 @@
     import {createPaste, deletePaste, getPastes} from "$lib/apiCalls.js";
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
     import HidingToast from "../../components/HidingToast.svelte";
+    import {isAdmin, isLoggedIn} from "$lib/stores.js";
 
     let loading = true;
     let showCopyToast = false;
@@ -12,6 +13,9 @@
     let notes = [];
 
     onMount(async () => {
+            if(!$isLoggedIn)
+                await goto("/login");
+
             notes = await getPastes();
 
             for (let note of notes) {
