@@ -3,6 +3,9 @@
     import {getSelfUser} from "$lib/apiCalls.js";
     import {storeAuth} from "$lib/loginHelper.js";
     import {goto} from "$app/navigation";
+    import HidingToast from "../../components/HidingToast.svelte";
+
+    let showErrorToast = false;
 
     async function doLogin(username, password) {
         storeAuth(username, password);
@@ -11,6 +14,10 @@
             await goto("/gallery")
         } else {
             localStorage.clear();
+            showErrorToast = true;
+            setTimeout(() => {
+                showErrorToast = false;
+            }, 5000);
         }
     }
 
@@ -19,3 +26,7 @@
     <LoginForm buttonClickFunction={doLogin} buttonText="Login" footerLink="/register" footerLinkText="Register"
                footerText="Not signed up yet?" hasPwForgottenText={true} headerText="Login"></LoginForm>
 </div>
+
+<HidingToast isErrorToast={true} bind:showToast={showErrorToast}>
+    Could not login. Username or Password Wrong!
+</HidingToast>

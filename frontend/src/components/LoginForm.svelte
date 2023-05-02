@@ -43,7 +43,7 @@
         </InputAddon>
         <Input bind:value={password} id="show-password"
                placeholder="{showPw ? 'passw0rd' : '********'}" type={showPw ? 'text' : 'password'}
-               on:keydown={(e)=>{if(e.keyCode == 13)buttonClickFunction(username.toLowerCase(),password);}}/>
+               on:keydown={(e)=>{if(e.keyCode === 13)buttonClickFunction(username.toLowerCase(),password);}}/>
     </ButtonGroup>
     {#if hasPwForgottenText}
         <a class="mb-2 dark:text-gray-600 text-sm font-medium" id="pw-forgor">Password forgotten?</a>

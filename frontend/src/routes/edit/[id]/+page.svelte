@@ -7,6 +7,7 @@
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
     import {beforeNavigate} from "$app/navigation";
     import {slide} from "svelte/transition";
+    import HidingToast from "../../../components/HidingToast.svelte";
 
     const id = $page.params.id;
 
@@ -14,7 +15,9 @@
     let content = "";
     let encryptionKey = "";
     let encryptionKeyModal = false;
-    let showCopyToast = false;
+    let showToast = false;
+    let toastText = "";
+    let toastIsError = false;
 
     onMount(async () => {
         encryptionKey = getEncryptionKey(id);
@@ -26,15 +29,23 @@
     async function saveNote() {
         const encTitle = CryptoES.AES.encrypt(title, encryptionKey).toString();
         const encContent = CryptoES.AES.encrypt(content, encryptionKey).toString();
-        const res = editPaste(id, encTitle, encContent);
+        const res = await editPaste(id, encTitle, encContent);
+        if (res.status === 200) {
+            toastText="Note Saved!";
+            showToast = true;
+            toastIsError = false;
+        }else{
+            toastText="Could not save Note!";
+            showToast = true;
+            toastIsError = true;
+        }
     }
 
     function copyEncryptionKey() {
         navigator.clipboard.writeText(encryptionKey);
-        showCopyToast = true;
-        setTimeout(() => {
-            showCopyToast = false;
-        }, 5000);
+        toastText="Link Copied to clipboard!";
+        showToast = true;
+        toastIsError = false;
     }
 
     function generateUrlExample() {
@@ -87,13 +98,6 @@
     </svelte:fragment>
 </Modal>
 
-<Toast bind:open={showCopyToast} class="fixed bottom-6 left-6" simple transition={slide}>
-    <svelte:fragment slot="icon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
-                  stroke-linejoin="round"/>
-        </svg>
-    </svelte:fragment>
-    Link Copied to clipboard!
-</Toast>
+<HidingToast isErrorToast={toastIsError} bind:showToast={showToast}>
+    {toastText}
+</HidingToast>

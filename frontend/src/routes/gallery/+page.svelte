@@ -4,7 +4,7 @@
     import {onMount} from "svelte";
     import {createPaste, deletePaste, getPastes} from "$lib/apiCalls.js";
     import {decryptToText, getEncryptionKey} from "$lib/encryptionHelper.js";
-    import {slide} from "svelte/transition";
+    import HidingToast from "../../components/HidingToast.svelte";
 
     let loading = true;
     let showCopyToast = false;
@@ -42,9 +42,6 @@
         navigator.clipboard.writeText(domain + path + parameter);
 
         showCopyToast = true;
-        setTimeout(() => {
-            showCopyToast = false;
-        }, 5000);
     }
 
     function closeDropDown(dropdownId) {
@@ -96,13 +93,6 @@
 </Button>
 <Tooltip>Create new Note</Tooltip>
 
-<Toast bind:open={showCopyToast} class="fixed bottom-6 left-6" simple transition={slide}>
-    <svelte:fragment slot="icon">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
-                  stroke-linejoin="round"/>
-        </svg>
-    </svelte:fragment>
+<HidingToast isErrorToast={false} bind:showToast={showCopyToast}>
     Link Copied to clipboard!
-</Toast>
+</HidingToast>

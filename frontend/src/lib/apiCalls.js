@@ -60,12 +60,12 @@ export async function createPaste(title, content) {
 }
 
 export async function editPaste(id, title, content) {
-    return await (await fetch(apiURL + '/paste/edit/' + id, {
+    return await fetch(apiURL + '/paste/edit/' + id, {
         method: 'POST', headers: {
             'content-type': 'application/json', 'authorization': setAuthHeader()
         }, body: JSON.stringify({"title": title, "content": content})
 
-    })).json();
+    });
 }
 
 export async function deletePaste(id) {
