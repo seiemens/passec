@@ -31,7 +31,7 @@
     </div>
     <Hr class="mb-8"/>
     <div class="flex gap-2 justify-center flex-col text-gray-700 dark:text-gray-300 whitespace-pre-line">
-        {content}
+        <pre>{content}</pre>
     </div>
 </div>
 
@@ -46,3 +46,13 @@
         <Button class="ml-auto" on:click={()=>loadPaste()}>Submit Key</Button>
     </svelte:fragment>
 </Modal>
+
+<style>
+    pre {
+        -webkit-text-size-adjust: 100%;
+        -moz-tab-size: 4;
+        tab-size: 4;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-feature-settings: normal;
+    }
+</style>
